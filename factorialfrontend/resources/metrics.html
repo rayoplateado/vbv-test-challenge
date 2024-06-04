@@ -1,0 +1,60 @@
+{{if .IsChartEnabled}}
+<div class="bg-white rounded-lg shadow-md p-4">
+    <canvas id="canvasChart" style="height: 300px !important;"></canvas>
+    <script>
+        var chartConfig = {
+            type: 'line',
+            data: {
+                labels: {{ .ChartData.Labels }},
+                datasets: [{
+                    label: {{ .ChartData.Label }},
+                    data: {{ .ChartData.Data }},
+                    borderWidth: 1,
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    backgroundColor: 'rgba(59, 130, 246, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            }
+        };
+        var canvasContext = document.getElementById('canvasChart').getContext("2d");
+        canvasContext.canvas.width = 100;
+        canvasContext.canvas.height = 100;
+        new Chart(canvasContext, chartConfig);
+    </script>
+</div>
+<br />
+{{end}}
+
+<div class="bg-white rounded-lg shadow-md p-4 max-h-80 overflow-y-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Id</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{range .Metrics}}
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap">{{.Id}}</td>
+                <td class="px-6 py-4 whitespace-nowrap"><span id="spanTimestamp{{.Id}}"></span>
+                    <script>convertTimestamp("{{.Timestamp}}", "spanTimestamp{{.Id}}")</script>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">{{.Name}}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{.Value}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>

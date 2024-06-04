@@ -1,0 +1,41 @@
+POST http://localhost:8080/metric
+Content-Type: application/json
+
+{
+    "Timestamp": "2024-05-22T10:10:15Z",
+    "Name": "App",
+    "Value": "error"
+}
+
+POST http://localhost:8080/metric
+Content-Type: application/json
+
+{
+    "Timestamp": "2024-05-22T10:10:20Z",
+    "Name": "App",
+    "Value": "error"
+}
+
+POST http://localhost:8080/metric
+Content-Type: application/json
+
+{
+    "Timestamp": "2024-05-22T10:15:30Z",
+    "Name": "App",
+    "Value": "error"
+}
+
+POST http://localhost:8080/metric
+Content-Type: application/json
+
+{
+    "Timestamp": "2024-05-22T10:17:30Z",
+    "Name": "App",
+    "Value": "error"
+}
+
+GET http://localhost:8080/metric
+
+GET http://localhost:8080/metric?name=fsdsdfsd
+
+GET http://localhost:8080/metric/distinct/name

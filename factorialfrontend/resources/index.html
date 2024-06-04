@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metrics Viewer</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold mb-4">Metrics App</h1>
+
+        <div id="divFilter" class="mb-4 p-4 bg-white rounded-lg shadow-md">
+            <div class="flex space-x-4 mb-4">
+                <select id="filterTime" name="filterTime" class="border rounded px-4 py-2 w-full">
+                    <option value="">Select Time</option>
+                    <option value="minute">Minute (Last Hour)</option>
+                    <option value="hour">Hour (Last Day)</option>
+                    <option value="day">Day (Last Month)</option>
+                </select>
+
+                <button id="btnFilter" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    hx-get="/metric/filter" hx-target="#divData" hx-include="#divFilter">Filter</button>
+            </div>
+        </div>
+
+        <div id="divData" hx-get="/metric" hx-trigger="load"></div>
+
+        <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
+            <span class="font-semibold">Add Metric:</span>
+            <form id="formAddMetric" class="mt-2 space-y-4" hx-post="/metric" hx-target="#divData">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                    <input type="text" name="name" id="name" class="border rounded px-4 py-2 w-full" required>
+                </div>
+                <div>
+                    <label for="value" class="block text-sm font-medium text-gray-700">Value:</label>
+                    <input type="text" name="value" id="value" class="border rounded px-4 py-2 w-full" required>
+                </div>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Add
+                    metric</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("htmx:afterRequest", function (event) {
+            if (event.target.id === "formAddMetric") {
+                document.getElementById("formAddMetric").reset();
+                document.getElementById("filterTime").selectedIndex = 0;
+            }
+        });
+
+        function convertTimestamp(timeStamp, element) {
+            const dt = new Date(timeStamp);
+            dt.setMinutes(dt.getMinutes() + dt.getTimezoneOffset())
+
+            document.getElementById(element).innerText = dt.toLocaleString()
+        }
+    </script>
+
+</body>
+
+</html>
